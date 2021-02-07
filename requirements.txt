@@ -14,7 +14,7 @@ jedi==0.18.0
 jicson==1.0.1
 kiwisolver==1.3.1
 matplotlib==3.3.4
-numpy==1.20.0
+numpy==1.19.5
 pandas==1.2.1
 parso==0.8.1
 pexpect==4.8.0
