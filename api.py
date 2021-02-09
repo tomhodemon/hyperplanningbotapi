@@ -49,12 +49,12 @@ def user(user_id: int, s: Session=Depends(getSession)):
     return user
     
 @app.get("/user/{user_id}/nextcourse", response_model=schemas.Course)
-def nextcourse(user_id: int, s: Session=Depends(getSession)):
+def nextcourse(user_id: int, popped: bool=False, s: Session=Depends(getSession)):
     """
     returns the course object corresponding to the course closest 
     to the user whose id has been passed in parameter
     """
-    nextcourse = utils.getNextCourse(user_id, s)
+    nextcourse = utils.getNextCourse(user_id, popped, s)
     return nextcourse
 
 @app.get("/user/{user_id}/nextcourses", response_model=List[schemas.Course])

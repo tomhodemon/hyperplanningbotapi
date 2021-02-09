@@ -17,15 +17,19 @@ class Course(CourseBase):
         orm_mode = True
 
 class UserBase(BaseModel):
-    name: str
+    first_name: str
+    last_name: str
     preferences: Optional[Union[dict, str]]
+    courses: Optional[List[Course]]
 
 class UserCreate(UserBase):
     url: HttpUrl
+    chat_id: int
 
 class User(UserBase):
     id: int
-    courses: List[Course]
+    chat_id: str
+    url: HttpUrl
 
     class Config:
         orm_mode = True

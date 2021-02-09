@@ -8,7 +8,7 @@ from datetime import datetime, timedelta, time
 import pandas as pd
 
 import models
-from config import URL
+from config import URL, TZ
 import schemas
 
 def processingData(users: int, s: Session):
@@ -27,14 +27,14 @@ def processingData(users: int, s: Session):
 
         df.columns = ['summary' if x == accepted_keys[0] else x.lower() for x in df.columns]
       
-        df['dtstart'] = pd.to_datetime(df['dtstart']).dt.tz_convert('Europe/Paris')
-        df['dtend'] = pd.to_datetime(df['dtend']).dt.tz_convert('Europe/Paris')
+        df['dtstart'] = pd.to_datetime(df['dtstart']).dt.tz_convert(TZ)
+        df['dtend'] = pd.to_datetime(df['dtend']).dt.tz_convert(TZ)
         
         df = df.set_index('dtstart')
 
-        today_start = datetime.now(tz=tz.gettz('Europe/Paris'))\
+        today_start = datetime.now(tz=tz.gettz(TZ))\
                 .replace(hour=0, minute=0, second=0, microsecond=0)
-        today_end = datetime.now(tz=tz.gettz('Europe/Paris'))\
+        today_end = datetime.now(tz=tz.gettz(TZ))\
                 .replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
 
         # today_start = datetime.now(tz=tz.gettz('Europe/Paris'))\
@@ -56,9 +56,16 @@ def processingData(users: int, s: Session):
 
         s.commit()
 
-def getNextCourse(user_id: int, s: Session) -> models.Course:
-    now = datetime.now(tz=tz.gettz('Europe/Paris'))
-    return s.query(models.Course).filter(models.Course.user_id==user_id, models.Course.dtstart > now).order_by(models.Course.dtstart.asc()).limit(1).first()
+def getNextCourse(user_id: int, popped: bool, s: Session) -> models.Course:
+    now = datetime.now(tz=tz.gettz(TZ))
+    course = s.query(models.Course).filter(models.Course.user_id==user_id, models.Course.dtstart > now).order_by(models.Course.dtstart.asc()).limit(1).first()
+    if popped and course is not None:
+        s.delete(course)
+        s.commit()
+        return course
+    else:
+        print('course is None (apperently)')
+        return course
     
 def getNextCourses(user_id: int, s: Session) -> List[models.Course]:
     return s.query(models.Course).filter_by(user_id=user_id).all()
@@ -77,7 +84,7 @@ def create_user(user: schemas.UserCreate, s: Session) -> models.User:
         user_preferences = json.dumps(user.preferences)
     else:
         user_preferences = user.preferences
-    user = models.User(name=user.name, url=user.url, preferences=user.preferences)
+    user = models.User(chat_id=user.chat_id, first_name=user.first_name, last_name=user.last_name, url=user.url, preferences=user.preferences)
     s.add(user)
     s.commit()
     return user

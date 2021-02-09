@@ -6,9 +6,6 @@ from models import Base
 from config import DATABASE_URL
 
 engine = sqlalchemy.create_engine(DATABASE_URL)
-
-print('database import')
-
 Session = sessionmaker(bind=engine)
 
 if __name__ == '__main__':
@@ -20,7 +17,13 @@ if __name__ == '__main__':
     Base.metadata.create_all(bind=engine)
     
     s = Session()
-    user = User(name='Tom Hodemon', url=URL)
+    user = {
+        "chat_id" : 1227641700,
+        "first_name" : "Tom",
+        "last_name" : "Hodemon",
+        "url": URL        
+    }
+    user = User(**user)
     s.add(user)
     s.commit()
     s.close()
