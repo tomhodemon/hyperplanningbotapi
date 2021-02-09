@@ -5,7 +5,7 @@ from database import Session, engine
 import utils
 from config import TZ
 
-sched = BlockingScheduler(tz=TZ')
+sched = BlockingScheduler(tz=TZ)
 
 @sched.scheduled_job('cron', day_of_week='mon-fri', hour=7) # run every weekday at 7:00am
 def processingDataJob():
