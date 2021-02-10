@@ -13,7 +13,7 @@ import schemas
 
 def processingData(users: int, s: Session):
     
-    accepted_keys = ['SUMMARY;LANGUAGE=fr', 'DTSTART', 'DTEND']
+    accepted_keys = ['SUMMARY;LANGUAGE=fr', 'LOCATION;LANGUAGE=fr', 'DTSTART', 'DTEND']
     data = {}
     
     for user in users:
@@ -25,7 +25,7 @@ def processingData(users: int, s: Session):
         unaccepted_keys = [header for header in df.columns.values if not header in accepted_keys]    
         df = df.drop(columns=unaccepted_keys)
 
-        df.columns = ['summary' if x == accepted_keys[0] else x.lower() for x in df.columns]
+        df.columns = [x.split(";")[0].lower() for x in df.columns]
       
         df['dtstart'] = pd.to_datetime(df['dtstart']).dt.tz_convert(TZ)
         df['dtend'] = pd.to_datetime(df['dtend']).dt.tz_convert(TZ)
@@ -47,11 +47,13 @@ def processingData(users: int, s: Session):
         df = df.sort_index()
         df = df.reset_index()
         
+        print(df)
+        
         data = df.to_json(orient='table', index=False)
         data = json.loads(data)['data']
 
         for elem in data:
-            course = models.Course(dtstart=elem['dtstart'], dtend=elem['dtend'], summary=elem['summary'], user_id=user.id)
+            course = models.Course(dtstart=elem['dtstart'], dtend=elem['dtend'], summary=elem['summary'], location=elem['location'], user_id=user.id)
             s.add(course)
 
         s.commit()

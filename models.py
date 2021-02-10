@@ -25,9 +25,10 @@ class Course(Base):
     dtstart = Column(DateTime)
     dtend = Column(DateTime)
     summary = Column(String)
+    location = Column(String)
     user_id = Column(Integer, ForeignKey('users.id'))
 
     def __repr__(self):
-        return "Course(id={}, dtstart={}, dtend={}, summary='{}', user_id={})"\
-                .format(self.id, self.dtstart, self.dtend, self.summary, self.user_id)
+        return "Course(id={}, dtstart={}, dtend={}, summary='{}', location='{}', user_id={})"\
+                .format(self.id, self.dtstart, self.dtend, self.summary, self.location, self.user_id)
 

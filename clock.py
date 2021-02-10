@@ -8,7 +8,7 @@ import utils
 # sched = BlockingScheduler(tz=TZ)
 sched = BlockingScheduler()
 
-@sched.scheduled_job('cron', day_of_week='mon-fri', hour=11, minute=6) # run every weekday at 7:00am
+# @sched.scheduled_job('cron', day_of_week='mon-fri', hour=7) # run every weekday at 7:00am
 def processingDataJob():
     s = Session()
 
@@ -41,7 +41,7 @@ def processingDataJob():
 
 #     s.close()
 
-sched.start()
+# sched.start()
 
-# if __name__ == '__main__':
-#     processingDataJob()
+if __name__ == '__main__':
+    processingDataJob()

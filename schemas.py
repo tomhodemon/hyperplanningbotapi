@@ -8,6 +8,7 @@ class CourseBase(BaseModel):
     dtstart: datetime
     dtend: datetime
     summary: str
+    location: Optional[str]
 
 class Course(CourseBase):
     id: int
