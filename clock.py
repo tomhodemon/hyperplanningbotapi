@@ -28,6 +28,7 @@ sched = BlockingScheduler()
 @sched.scheduled_job('interval', minutes=3)
 def processingDataJob():
 
+    print("entry point: ", __name__)
     s = Session()
 
     Base.metadata.bind = engine
@@ -36,9 +37,11 @@ def processingDataJob():
     Course.create(engine)
 
     users = s.query(User).all()
+    print("users: ", users)
     utils.processingData(users, s)
     
     print("Data has been successfully collected")
+    print("exit point: ", __name__)
 
     s.close()
 
