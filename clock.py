@@ -8,7 +8,23 @@ import utils
 # sched = BlockingScheduler(tz=TZ)
 sched = BlockingScheduler()
 
-# @sched.scheduled_job('cron', day_of_week='mon-fri', hour=7) # run every weekday at 7:00am
+@sched.scheduled_job('cron', day_of_week='mon-fri', hour=11) # run every weekday at 7:00am
+def processingDataJob():
+    s = Session()
+
+    Base.metadata.bind = engine
+    Course = Base.metadata.tables['courses']
+    Course.drop(engine)
+    Course.create(engine)
+
+    users = s.query(User).all()
+    utils.processingData(users, s)
+    
+    print("Data has been successfully collected")
+
+    s.close()
+
+# @sched.scheduled_job('interval', minutes=3)
 # def processingDataJob():
 
 #     s = Session()
@@ -24,26 +40,6 @@ sched = BlockingScheduler()
 #     print("Data has been successfully collected")
 
 #     s.close()
-
-@sched.scheduled_job('interval', minutes=3)
-def processingDataJob():
-
-    print("entry point: ", __name__)
-    s = Session()
-
-    Base.metadata.bind = engine
-    Course = Base.metadata.tables['courses']
-    Course.drop(engine)
-    Course.create(engine)
-
-    users = s.query(User).all()
-    print("users: ", users)
-    utils.processingData(users, s)
-    
-    print("Data has been successfully collected")
-    print("exit point: ", __name__)
-
-    s.close()
 
 sched.start()
 
