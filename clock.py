@@ -25,7 +25,7 @@ sched = BlockingScheduler()
 
 #     s.close()
 
-@sched.scheduled_job('interval', hours=1)
+@sched.scheduled_job('interval', minutes=3)
 def processingDataJob():
 
     s = Session()
