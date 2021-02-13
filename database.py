@@ -18,7 +18,7 @@ if __name__ == '__main__':
     
     s = Session()
     user = {
-        "chat_id" : 1227641700,
+        "id" : 1227641700,
         "first_name" : "Tom",
         "last_name" : "Hodemon",
         "url": URL        

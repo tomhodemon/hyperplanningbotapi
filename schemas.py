@@ -24,12 +24,11 @@ class UserBase(BaseModel):
     courses: Optional[List[Course]]
 
 class UserCreate(UserBase):
+    id: int
     url: HttpUrl
-    chat_id: int
 
 class User(UserBase):
     id: int
-    chat_id: str
     url: HttpUrl
 
     class Config:
