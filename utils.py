@@ -34,10 +34,10 @@ def processingData(users: int, s: Session, td: int = 0):
 
         df['dtstart'] = df.dtstart.dt.strftime('%Y-%m-%d %H:%M:%S')
         df['dtend'] = df.dtend.dt.strftime('%Y-%m-%d %H:%M:%S')
+        df['location'].fillna('No specified location', inplace=True)
 
         data = df.to_json(orient='table', index=False)
         data = json.loads(data)['data']
-
 
         for elem in data:
             course = models.Course(dtstart=elem['dtstart'], dtend=elem['dtend'], summary=elem['summary'], location=elem['location'], user_id=user.id)
@@ -89,8 +89,11 @@ if __name__ == '__main__':
     from models import User
     import sys
 
-    td = int(sys.argv[1]) #timedelta
-
+    if len(argv) > 1:
+        td = int(sys.argv[1]) #timedelta
+    else:
+        td = 0
+        
     s = Session()
 
     users = s.query(User).all()
