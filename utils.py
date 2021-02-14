@@ -45,6 +45,8 @@ def processingData(users: int, s: Session, td: int = 0):
 
         s.commit()
 
+
+
 def getNextCourse(user_id: int, popped: bool, s: Session) -> models.Course:
     now = datetime.now(tz=tz.gettz(TZ))
     course = s.query(models.Course).filter(models.Course.user_id==user_id, models.Course.dtstart >= now).order_by(models.Course.dtstart.asc()).limit(1).first()
@@ -57,7 +59,18 @@ def getNextCourse(user_id: int, popped: bool, s: Session) -> models.Course:
     
 def getNextCourses(user_id: int, s: Session) -> List[models.Course]:
     courses = s.query(models.Course).filter_by(user_id=user_id).all()
-    return s.query(models.Course).filter_by(user_id=user_id).all()
+    if len(courses) > 1:
+        return courses
+    else:
+        return None
+
+def getUser(user_id: int, s: Session) -> models.User:   
+    user = s.query(models.User).filter_by(id=user_id).first()
+    if user is  not None:
+        return user
+    else:
+        return None
+
 
 def getCourses(s: Session) -> List[models.Course]:
     return s.query(models.Course).all()
@@ -65,8 +78,7 @@ def getCourses(s: Session) -> List[models.Course]:
 def getUsers(s: Session) -> List[models.User]:
     return s.query(models.User).all()
 
-def getUser(user_id: int, s: Session) -> models.User:   
-    return s.query(models.User).filter_by(id=user_id).first()
+
 
 def create_user(user: schemas.UserCreate, s: Session) -> models.User:
     if user.preferences is not None:
@@ -84,16 +96,22 @@ def update_preferences(update: schemas.UserUpdate, s: Session) -> models.User:
     return getUser(update.user_id, s)
 
 if __name__ == '__main__':
+    # url = "https://tomorrow.audencia.com/public/api/courses/1bd232472374f44a8ecc92a709c946fb.ics"
+    # data = jicson.fromWeb(url, auth="")['VCALENDAR'][0]['VEVENT']
+    # with open('data.json', 'w') as file:
+    #     json.dump(data, file, indent=2)
+    # df = pd.json_normalize(data)
+    # print(df.head(10))
 
     from database import Session
     from models import User
     import sys
 
-    if len(argv) > 1:
+    if len(sys.argv) > 1:
         td = int(sys.argv[1]) #timedelta
     else:
         td = 0
-        
+
     s = Session()
 
     users = s.query(User).all()

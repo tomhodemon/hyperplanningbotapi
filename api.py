@@ -50,7 +50,13 @@ def update_preferences(update: schemas.UserUpdate, s: Session = Depends(getSessi
     user = utils.update_preferences(update, s)
     return user
 
-
+@app.get("/user/{user_id}", response_model=schemas.User)
+def user(user_id: int, s: Session=Depends(getSession)):
+    """
+    returns the user object whose id has been passed in parameter
+    """
+    user = utils.getUser(user_id, s)
+    return user
 
 
 
@@ -77,10 +83,3 @@ def courses(s: Session=Depends(getSession)):
     courses = utils.getCourses(s)
     return courses
 
-@app.get("/admin/user/{user_id}", response_model=schemas.User)
-def user(user_id: int, s: Session=Depends(getSession)):
-    """
-    returns the user object whose id has been passed in parameter
-    """
-    user = utils.getUser(user_id, s)
-    return user
