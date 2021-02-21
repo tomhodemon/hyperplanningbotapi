@@ -16,14 +16,15 @@ if __name__ == '__main__':
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     
-    # s = Session()
-    # user = {
-    #     "id" : 1227641700,
-    #     "first_name" : "Tom",
-    #     "last_name" : "Hodemon",
-    #     "url": URL        
-    # }
-    # user = User(**user)
-    # s.add(user)
-    # s.commit()
-    # s.close()
+    s = Session()
+    user = {
+        "id" : 1227641700,
+        "first_name" : "Tom",
+        "last_name" : "Hodemon",
+        "preferences" : {"AutoMessaging": False},
+        "url": URL        
+    }
+    user = User(**user)
+    s.add(user)
+    s.commit()
+    s.close()

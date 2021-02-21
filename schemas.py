@@ -4,36 +4,45 @@ from datetime import datetime
 
 import models
 
-class CourseBase(BaseModel):
+###### Course ######
+class Course(BaseModel):
+    id: int
+    user_id: int
+    tz: str
     dtstart: datetime
     dtend: datetime
     summary: str
-    location: Optional[str]
-
-class Course(CourseBase):
-    id: int
-    user_id: int
+    location: str
 
     class Config:
-        orm_mode = True
+        orm_mode = True   
 
-class UserBase(BaseModel):
+###### User ######
+class User(BaseModel):
+    id: int
     first_name: str
     last_name: str
-    preferences: Optional[Union[dict, str]]
-    courses: Optional[List[Course]]
-
-class UserCreate(UserBase):
-    id: int
-    url: HttpUrl
-
-class User(UserBase):
-    id: int
+    preferences: Optional[Union[dict, None]] = None
+    courses: Optional[List[Course]] = []
     url: HttpUrl
 
     class Config:
         orm_mode = True
+
+class UserCreate(User):
+    pass
 
 class UserUpdate(BaseModel):
     user_id: int
     preferences: dict
+
+###### Log ######
+class Log(BaseModel):
+    id: int
+    tz: str
+    dt: datetime
+    sender: str
+    log: str
+
+    class Config:
+        orm_mode = True

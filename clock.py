@@ -1,9 +1,11 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
+from datetime import datetime
+import pytz
 
-from models import User, Base
+from models import User, Log, Base
 from database import Session, engine
-import utils
 from config import TZ
+import utils
 
 sched = BlockingScheduler(tz=TZ)
 
@@ -19,7 +21,9 @@ def processingDataJob():
     users = s.query(User).all()
     utils.processingData(users, s)
     
-    print("Data has been successfully collected")
+    print('Data has been succesfully collected')
+    # utils.newLog('clock.py', 'Data has been succesfully collected', s)
+
 
     s.close()
 
@@ -42,7 +46,5 @@ sched.start()
 
 #     s.close()
 
-
-
-# if __name__ == '__main__':
-#     processingDataJob()
+if __name__ == '__main__':
+    processingDataJob()
