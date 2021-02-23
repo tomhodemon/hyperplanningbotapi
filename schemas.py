@@ -22,7 +22,7 @@ class User(BaseModel):
     id: int
     first_name: str
     last_name: str
-    preferences: Optional[Union[dict, None]] = None
+    preferences: Optional[Union[dict]]
     courses: Optional[List[Course]] = []
     url: HttpUrl
 

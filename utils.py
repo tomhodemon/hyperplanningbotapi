@@ -54,11 +54,54 @@ def processingData(users: int, s: Session, td: int = 0):
         data = df.to_json(orient='table', index=False)
         data = json.loads(data)['data']
 
+        print(len(data))
         for elem in data:
+            # elem = slotProcessing(elem)
             course = models.Course(dtstart=elem['dtstart'], dtend=elem['dtend'], summary=elem['summary'], location=elem['location'], user_id=user.id)
             s.add(course)
         
-        s.commit()
+        # s.commit()
+
+def slotProcessing(course: dict) -> dict:
+
+    slots = {
+        "type": "standard",
+        "tz": "UTC",
+        "slot1": {
+            "dtstart": "07:00:00",
+            "dtend": "08:20:00"
+        },
+        "slot2": {
+            "dtstart": "08:35:00",
+            "dtend": "09:55:00"
+        },
+        "slot3": {
+            "dtstart": "10:05:00",
+            "dtend": "11:25:00"
+        },
+        "slot4": {
+            "dtstart": "12:50:00",
+            "dtend": "14:10:00"
+        },
+        "slot5": {
+            "dtstart": "14:20:00",
+            "dtend": "15:40:00"
+        },
+        "slot6": {
+            "dtstart": "15:55:00",
+            "dtend": "17:15:00"
+        }
+    }
+
+    ctype = course['summary'].replace('\r', '').replace(' ', '').split('-')[-1]
+    if ctype == 'TD':
+        course['ctype'] = 'standard'
+    else:
+        course['ctype'] = 'special'
+    print('sum: ', course, 'ctype: ', ctype)
+    return course
+    
+
 
 def getNextCourse(user_id: int, popped: bool, s: Session) -> models.Course:
     now = datetime.now(tz=tz.gettz(TZ))

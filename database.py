@@ -21,7 +21,6 @@ if __name__ == '__main__':
         "id" : 1227641700,
         "first_name" : "Tom",
         "last_name" : "Hodemon",
-        "preferences" : {"AutoMessaging": False},
         "url": URL        
     }
     user = User(**user)

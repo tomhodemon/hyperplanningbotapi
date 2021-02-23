@@ -10,7 +10,7 @@ class User(Base):
     first_name = Column(String)
     last_name = Column(String)
     url = Column(String)
-    preferences = Column(JSON, nullable=True)
+    preferences = Column(JSON, default={"AutoMessaging": False, "AdaptiveSlots": False})
 
     courses = relationship('Course', backref='user')
 
